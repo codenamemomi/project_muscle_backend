@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .managers import CustomUserManager  # Import custom manager
+from .managers import CustomUserManager
 
 class CustomUser(AbstractUser):
     GOAL_CHOICES = (
@@ -33,9 +33,9 @@ class CustomUser(AbstractUser):
         ('2 times a week', '2 times a week'),
         ('Occasionally', 'Occasionally'),
     )
-
+    username = None
     email = models.EmailField(max_length=255, unique=True)
-    full_name = models.CharField(blank=True, max_length=225, null=True)
+    full_name = models.CharField(blank=True, max_length=225)
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
