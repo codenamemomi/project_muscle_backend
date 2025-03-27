@@ -4,9 +4,11 @@ from rest_framework import status
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny
-from .serializers import CustomUserSerializer, LoginSerializer
+from .serializers import CustomUserSerializer, LoginSerializer, UserUpdateSerializer
 from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
+from rest_framework.permissions import IsAuthenticated
+
 
 
 
@@ -115,3 +117,23 @@ class LogoutView(APIView):
             return response
         return Response({"message": "No refresh token found in cookies."}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class EditUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        print(request.user)
+        if not request.user.is_authenticated:
+            return Response({"error": "User is not authenticated"}, status=401)
+
+        user = request.user
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Profile updated successfully", "user": serializer.data},
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

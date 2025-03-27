@@ -110,7 +110,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'user.authentication.CookieJWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     ),
 }
 
@@ -123,6 +127,10 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SECRET_KEY,
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'AUTH_COOKIE_HTTP_ONLY': True,
+    'AUTH_COOKIE_SECURE': False,
+    'AUTH_COOKIE_SAMESITE': 'Lax',
+    'AUTH_COOKIE': 'access_token'
 }
 
 AUTH_USER_MODEL = 'user.CustomUser'

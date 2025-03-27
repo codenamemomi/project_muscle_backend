@@ -64,3 +64,12 @@ class LoginSerializer(serializers.Serializer):
             },
         }
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ["username", "email", "full_name"]
+        extra_kwargs = {
+            "email": {"required": False},
+            "username": {"required": False},
+            "full_name": {"required": False},
+        }
